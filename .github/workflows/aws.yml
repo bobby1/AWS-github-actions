@@ -86,6 +86,7 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
         # IMAGE_TAG: AWSECR-$(date +%s) # set this to your preferred image tag
       run: |
+        export DATE_TAG=$(TZ=America/Los_Angeles date +%y%m%d-%H%M)
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
@@ -94,8 +95,8 @@ jobs:
         # echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$(date +%y%m%d-%H%M)
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$(date +%y%m%d-%H%M)
+        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$DATE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$DATE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
 
     # - name: Fill in the new image ID in the Amazon ECS task definition
