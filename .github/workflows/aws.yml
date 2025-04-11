@@ -86,7 +86,7 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
         # IMAGE_TAG: AWSECR-$(date +%s) # set this to your preferred image tag
       run: |
-        export DATE_TAG=$(TZ=America/Los_Angeles date +%y%m%d-%H%M)
+        export DATE_TAG=g$(TZ=America/Los_Angeles date +%y%m%d-%H%M)
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
