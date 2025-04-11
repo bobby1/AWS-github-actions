@@ -3,7 +3,7 @@
     "containerDefinitions": [
         {
             "name": "dev-base-tsk-80",
-            "image": "497140136649.dkr.ecr.us-west-2.amazonaws.com/dev/bbtest",
+            "image": "497140136649.dkr.ecr.us-west-2.amazonaws.com/dev/dev-test-repository:latest",
             "cpu": 0,
             "portMappings": [
                 {
