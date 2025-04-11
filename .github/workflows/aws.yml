@@ -105,7 +105,9 @@ jobs:
         # container-name: "497140136649.dkr.ecr.us-west-2.amazonaws.com/dev-test-repository"
         # image: ${{ steps.build-image.outputs.image }}
         # image: "latest"
-        image: "497140136649.dkr.ecr.us-west-2.amazonaws.com/dev-test-repository:latest"
+        # image: "497140136649.dkr.ecr.us-west-2.amazonaws.com/dev-test-repository:latest"
+        image: ${{ steps.build-image.outputs.image }}
+
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
