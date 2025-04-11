@@ -99,6 +99,15 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$DATE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
 
+    - name: AWS CLI - Update ECS Service
+      id: update-service
+      run: |
+        # Update the ECS service to use the new image.
+        # aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
+
+
+
+
     # - name: Fill in the new image ID in the Amazon ECS task definition
     #   id: task-def
     #   uses: aws-actions/amazon-ecs-render-task-definition@v1
