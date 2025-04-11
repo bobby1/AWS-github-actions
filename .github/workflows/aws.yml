@@ -82,8 +82,8 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        # IMAGE_TAG: ${{ github.sha }}
-        IMAGE_TAG: AWSECR-$(date +%s) # set this to your preferred image tag
+        IMAGE_TAG: ${{ github.sha }}
+        # IMAGE_TAG: AWSECR-$(date +%s) # set this to your preferred image tag
       run: |
         # Build a docker container and
         # push it to ECR so that it can
