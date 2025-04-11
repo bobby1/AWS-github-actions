@@ -100,10 +100,11 @@ jobs:
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
-        # container-name: ${{ env.CONTAINER_NAME }}
-        container-name: "497140136649.dkr.ecr.us-west-2.amazonaws.com/dev-test-repository"
+        container-name: ${{ env.CONTAINER_NAME }}
+        # container-name: "497140136649.dkr.ecr.us-west-2.amazonaws.com/dev-test-repository"
         # image: ${{ steps.build-image.outputs.image }}
-        image: "latest"
+        # image: "latest"
+        image: "497140136649.dkr.ecr.us-west-2.amazonaws.com/dev-test-repository:latest"
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
