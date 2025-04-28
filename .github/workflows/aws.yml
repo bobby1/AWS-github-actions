@@ -72,6 +72,7 @@ jobs:
       run: |
         export DATE_TAG=g$(TZ=America/Los_Angeles date +%y%m%d-%H%M)
         echo $DATE_TAG >> index.html
+        echo "<html><body><h1>This image was built on Github using Actions at " $DATE_TAG "</h1></body></html>" >> index.html
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
