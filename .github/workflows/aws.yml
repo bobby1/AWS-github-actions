@@ -86,5 +86,4 @@ jobs:
       id: update-service
       run: |
         # Update the ECS service to use the new image.
-        # aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
-        
+        aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
