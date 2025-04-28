@@ -1,0 +1,62 @@
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+
+env:
+  AWS_REGION: us-west-2 # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: dev-test-repository # set this to your Amazon ECR repository name
+  ECS_SERVICE: dev-base-ecs-service # set this to your Amazon ECS service name
+  ECS_CLUSTER: dev-base-webpage-ecs-cluster # set this to your Amazon ECS cluster name
+  ECS_TASK_DEFINITION: dev-base-tsk-80
+  CONTAINER_NAME: dev-base-tsk-80
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+        # IMAGE_TAG: AWSECR-$(date +%s) # set this to your preferred image tag
+      run: |
+        export DATE_TAG=g$(TZ=America/Los_Angeles date +%y%m%d-%H%M)
+        echo "<html><body><h1>This image was built on Github using Actions at " $DATE_TAG "</h1></body></html>" >> index.html
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        # docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:glatest .   ### glatest to avoid conflict with latest tag
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:glatest
+        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:glatest $ECR_REGISTRY/$ECR_REPOSITORY:$DATE_TAG
+        # docker push $ECR_REGISTRY/$ECR_REPOSITORY:$DATE_TAG
+        # echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
+
+    - name: AWS CLI - Update ECS Service
+      id: update-service
+      run: |
+        # Update the ECS service to use the new image.
+        aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
